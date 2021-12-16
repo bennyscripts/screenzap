@@ -3,8 +3,6 @@ import json
 import os
 import getpass
 
-from pynput import keyboard
-
 from utils.resource_path import resource_path
 from utils import Config
 from utils import Clipboard
@@ -19,14 +17,6 @@ index = 0
 config = Config()
 params = config.get_params()
 addedParams = []
-
-COMBINATIONS = [
-    {keyboard.Key.cmd, keyboard.Key.shift, keyboard.KeyCode(char='i')},
-    {keyboard.Key.cmd, keyboard.Key.shift, keyboard.KeyCode(char='I')}
-]
-
-current = set()
-controller = keyboard.Controller()
 
 root = tk.Tk()
 root.grid_columnconfigure(0, weight=1)
