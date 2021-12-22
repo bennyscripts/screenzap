@@ -3,6 +3,7 @@ import pyautogui
 import PIL
 import os
 
+from contextlib import suppress
 from notifier import Notifier
 from clipboard import Clipboard
 from uploader import Uploader
@@ -41,6 +42,12 @@ def takescreenshot():
     myScreenshot.thumbnail((screenWidth, screenHeight))
     myScreenshot.save('screenshot.png')
     
+def close(event):
+    with suppress(Exception): os.remove('croppedScreenshot.png')
+    with suppress(Exception): os.remove("screenshot.png")
+
+    exit()
+
 class GrabWindow:
     def __init__(self, master):
         self.root = tk.Toplevel(master)
@@ -48,7 +55,7 @@ class GrabWindow:
         self.root.attributes('-alpha', 0.25)
         self.root.attributes('-topmost', True)
         self.root.bind("<Return>", self.on_enter)
-        self.root.bind("<Escape>", exit)
+        self.root.bind("<Escape>", close)
 
         self.root.mainloop()
 
@@ -73,7 +80,7 @@ class MainWindow:
         self.label = tk.Label(self.root, image=self.screenshot)
         self.label.pack()
 
-        self.root.bind('<Escape>', lambda e: self.root.destroy())
+        self.root.bind('<Escape>', close)
         self.root.after(0, GrabWindow(self.root))
 
         self.root.mainloop()
