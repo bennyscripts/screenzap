@@ -1,8 +1,15 @@
 import json
 import os
 import getpass
+import sys
 
-from .resource_path import resource_path
+def resource_path(relative_path):
+  try:
+    base_path = sys._MEIPASS
+  except Exception:
+    base_path = os.path.abspath(".")
+
+  return os.path.join(base_path, relative_path)
 
 def checkForConfig():
     username = getpass.getuser()
@@ -13,7 +20,9 @@ def checkForConfig():
     cfg = json.load(open(f"/Users/{username}/Library/Preferences/bennyontop.clipboarduploader/config.json"))
     if "file_fieldname" not in cfg: cfg["file_fieldname"] = ""
     if "request" not in cfg: cfg["request"] = {"method": "", "url": ""}
+    if "body_type" not in cfg["request"]: cfg["request"]["body_type"] = "Form Data"
     if "params" not in cfg: cfg["params"] = {}
+    if "response" not in cfg: cfg["response"] = {"method": "Plain text", "json": ""}
     json.dump(cfg, open(f"/Users/{username}/Library/Preferences/bennyontop.clipboarduploader/config.json", "w"), indent=4, sort_keys=False)
 
 class Config:
@@ -29,3 +38,6 @@ class Config:
     
     def get_params(self):
         return self.config['params']
+
+    def get_response(self):
+        return self.config['response']
